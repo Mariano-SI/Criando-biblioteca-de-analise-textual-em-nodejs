@@ -7,6 +7,9 @@ fs.readFile(link, 'utf-8', (err, data) => {
     separateParagraphs(data);
 })
 
+function clearWord(word){
+    return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+}
 
 function separateParagraphs(text){
     const paragraphs = text.toLowerCase().split('\n');
@@ -18,10 +21,14 @@ function checkDuplicateWords(text){
     const wordList = text.split(' ');
     const result = {};
     for (const word of wordList) {
-        if(result[word]){
-            result[word] = result[word] + 1;
-        }else{
-            result[word] = 1;
+        if(word.length >= 3){
+            const cleanWord = clearWord(word);
+        
+            if(result[cleanWord]){
+                result[cleanWord] = result[cleanWord] + 1;
+            }else{
+                result[cleanWord] = 1;
+            }
         }
     }
     return result;
