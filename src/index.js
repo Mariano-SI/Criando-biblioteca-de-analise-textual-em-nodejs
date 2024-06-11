@@ -13,7 +13,11 @@ function clearWord(word){
 
 function separateParagraphs(text){
     const paragraphs = text.toLowerCase().split('\n');
-    const count = paragraphs.map(paragraph => checkDuplicateWords(paragraph));
+    
+    const count = paragraphs.flatMap(paragraph =>{
+        if(!paragraph) return [];
+        return checkDuplicateWords(paragraph);
+    })
     console.log(count);
 }
 
