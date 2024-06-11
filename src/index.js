@@ -4,7 +4,25 @@ const filePath = process.argv; //process.argv é um array que contém os argumen
 const link = filePath[2];
 
 fs.readFile(link, 'utf-8', (err, data) => {
-    console.log(data)
+    separateParagraphs(data);
 })
 
-console.log(link);
+
+function separateParagraphs(text){
+    const paragraphs = text.toLowerCase().split('\n');
+    const count = paragraphs.map(paragraph => checkDuplicateWords(paragraph));
+    console.log(count);
+}
+
+function checkDuplicateWords(text){
+    const wordList = text.split(' ');
+    const result = {};
+    for (const word of wordList) {
+        if(result[word]){
+            result[word] = result[word] + 1;
+        }else{
+            result[word] = 1;
+        }
+    }
+    return result;
+}
