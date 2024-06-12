@@ -1,21 +1,49 @@
 import fs from 'fs';
+import path from 'path';
 import handleErrors from './errors/functionsErro.js';
 import {countWords} from './index.js';
 import {makeFileText} from './helpers.js';
+import {Command} from 'commander';
 
-const cliArgs = process.argv; //process.argv é um array que contém os argumentos da linha de comando passados para o script Node.js
-const fileToReadPath = cliArgs[2];
-const fileToSavePath = cliArgs[3];
+const program = new Command();
 
-fs.readFile(fileToReadPath, 'utf-8', (err, data) => {
-    try{
-        if(err) throw err;
-        const result = countWords(data);
-        createAndSaveFile(result, fileToSavePath);
-    }catch(err){
-        console.log(handleErrors(err));
-    }
-})
+program
+    .version('0.0.1')
+    .option('-t, --text <string>', 'Caminho do texto a ser processado')
+    .option('-d, --destiny <string>', 'Caminho de onde iremos armazenar o arquivo de resultado')
+    .action((options) =>{
+        const {text, destiny} = options;
+        if(!text || !destiny){
+            console.error('erro: Você precisa passar o caminho do texto e o caminho de destino!');
+            program.help();
+            return;
+        } 
+
+        const textPath = path.resolve(text);
+        const destinyPath = path.resolve(destiny);
+
+        try {
+            processArchive(textPath, destinyPath);
+            console.log('Texto processado com sucesso!')
+        } catch (error) {
+            console.log('Ocorreu um erro ao processar o arquivo!', error)
+        }
+    })
+
+program.parse();
+
+function processArchive(fileToReadPath, fileToSavePath){
+    fs.readFile(fileToReadPath, 'utf-8', (err, data) => {
+        try{
+            if(err) throw err;
+            const result = countWords(data);
+            createAndSaveFile(result, fileToSavePath);
+        }catch(err){
+            console.log(handleErrors(err));
+        }
+    })
+}
+
 
 async function createAndSaveFile(content, pathToSave){
     const newArchive = `${pathToSave}/result.txt`; 
