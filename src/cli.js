@@ -4,6 +4,7 @@ import handleErrors from './errors/functionsErro.js';
 import {countWords} from './index.js';
 import {makeFileText} from './helpers.js';
 import {Command} from 'commander';
+import chalk from 'chalk';
 
 const program = new Command();
 
@@ -14,7 +15,7 @@ program
     .action((options) =>{
         const {text, destiny} = options;
         if(!text || !destiny){
-            console.error('erro: Você precisa passar o caminho do texto e o caminho de destino!');
+            console.error(chalk.red('erro: Você precisa passar o caminho do texto e o caminho de destino!'));
             program.help();
             return;
         } 
@@ -24,9 +25,9 @@ program
 
         try {
             processArchive(textPath, destinyPath);
-            console.log('Texto processado com sucesso!')
+            console.log(chalk.green('Texto processado com sucesso!'))
         } catch (error) {
-            console.log('Ocorreu um erro ao processar o arquivo!', error)
+            console.log(chalk.red('Ocorreu um erro ao processar o arquivo!'), error)
         }
     })
 
