@@ -4,8 +4,8 @@ export function countWords(text){
     const count = paragraphs.flatMap(paragraph =>{
         if(!paragraph) return [];
         return checkDuplicateWords(paragraph);
-    })
-    console.log(count);
+    });
+    return count;
 }
 
 function extractParagraphs(text){
